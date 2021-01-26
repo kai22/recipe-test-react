@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/recipes.css">
+
+    <title>Recipes.com</title>
+  </head>
+  <body>
+
+    <header class="bg-dark">
+
+            <section class="container">
+                <div class="row">
+                    
+                    <div class="col col-md-3 mt-3">
+                       Recipes.com
+                    </div>
+
+                    <div class="d-none d-md-block col col-md-9 mt-3" style="text-align:right">
+                       <ul>
+                           <li class="ml-5">About</li>
+                           <li class="ml-5">Carrers</li>
+                           <li class="ml-5">Awards</li>
+                       </ul>
+
+                    </div>
+
+                    <div class="d-md-none col col-md-9 mt-3" style="text-align: right;">
+                        <div class="bi bi-three-dots"></div>
+                    </div>
+
+                </div>
+            </section>
+
+        </header>
+
+
+    <!--section class="container">
+        <h1 class="display-1"><i class="bi-alarm"></i>&nbsp;Hello, world!</h1>
+    </section-->
+
+   
+
+    <main id="wrapper">
+
+        <section class="container mt-5 mb-5" id="app">
+            
+            
+            
+
+        </section>
+
+
+    </main>
+
+
+
+    <footer class="footer bg-dark">
+        
+        <section class="container">
+
+            <div class="row">
+
+                <div class="col col-md-4 mt-4">
+                   &copy2020
+                </div>
+                <div class="col col-md-4 mt-4">
+                   &nbsp;
+                </div>
+                <div class="col col-md-4 mt-4"  style="text-align: right;">
+                    <ul>
+                        <li class="bi bi-instagram ml-2"></li>
+                        <li class="bi bi-facebook ml-2"></li>
+                        <li class="bi bi-bootstrap ml-2"></li>
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+
+    </footer>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/es6-promise.auto.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/ramda.min.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+
+    <script type="text/babel">
+
+        function ajaxSuccess(d){
+            console.log(d);
+        }
+
+        function ajaxError(XMLHttpRequest, textStatus, errorThrown){
+            console.log(`request: ${JSON.stringify(XMLHttpRequest)}`);
+            console.log(`status: ${textStatus}`);
+            console.log(`error: ${errorThrown}`);
+
+        }
+
+        function ajaxGet(url){
+
+            return  $.ajax({
+                type: "GET",
+                url: url,
+                contentType:"application/json",
+                dataType: 'json',
+                success:ajaxSuccess,
+                error:ajaxError     
+            });
+        }
+
+        function findObj(arr,key,val){ // find an object in an array by key=value
+
+            return R.find(R.propEq(key, val))(arr);
+        }
+
+
+const DynamicComponent = (props) => {
+
+    const components = {
+        event: SpeEvent,
+        local: SpeLocal,
+        promocode: SpePromo,
+        sale: SpeSale
+    };
+
+    let InnerComponent = components[props.type];
+
+    return <InnerComponent special={props.special} />
+
+}
+
+
+const SpeEvent = (props) => (
+    <div className="sevent">
+        <span><i className="bi bi-patch-exclamation-fill"></i> Special Event:</span> <strong>{props.special.title}</strong><br/>
+        <i className="specialtext">{props.special.text}</i>
+    </div>
+)
+
+const SpePromo = (props) => (
+    <div className="spromo">
+        <span><i className="bi bi-gift"></i> PROMO:</span> <strong>{props.special.title}</strong><br />
+        <i className="specialtext">{props.special.text}</i>
+    </div>
+);
+
+const SpeSale = (props) => (
+    <div className="ssale">
+        <span><i className="bi bi-tags-fill"></i> SALE!:</span> <strong>{props.special.title}</strong><br/>
+        <i className="specialtext">{props.special.text}</i>
+    </div>
+);
+            
+
+const SpeLocal = (props) => (
+    <div className="slocal">
+        <span><i className="bi bi-geo-alt-fill"></i> Local to You:</span> <strong>{props.special.title}</strong><br/>
+        <i className="specialtext">{props.special.text}</i>
+    </div>
+);
+
+
+const Dtask = (props) => {
+
+    if(props.task.optional){
+
+            return (<div className="dtask"><strong>OPTIONAL: </strong>{props.task.instructions}</div>)
+
+    } else {
+
+            return (<div className="dtask">{props.task.instructions}</div>)
+    }
+
+}
+
+const DirectionsBlock = (props) =>{
+
+    return (
+        <div className="col col-md-8">
+            <h5>Cooking Directions</h5>
+            {props.children}
+        </div>
+    )
+}
+
+const IngredientList = (props) => {
+
+    return (
+        <div className="col col-md-4 pt-4">
+                {props.children}
+        </div>
+    )
+}
+
+const IngredientItem = (props) =>{
+
+    if(props.item.special){
+
+        return (
+            <div className="item mb-2">{props.item.amount} {props.item.measurement ? props.item.measurement : null } {props.item.name} <DynamicComponent type={props.item.special.type} special={props.item.special} />
+            </div>
+        )
+
+
+    } else {
+
+        return (
+            <div className="item mb-2">{props.item.amount} {props.item.measurement ? props.item.measurement : null } {props.item.name}
+            </div>
+        )
+
+    }
+
+}
+
+
+
+const RecipeBlock = (props) => {
+
+
+    return (
+        
+            <div className="recipeBlock col-md-3 p-3" onClick={() => props.selectRecipe(props.recipe.uuid)}>
+                <div className="row">
+                    <div className="col col-md-6">
+                        <img src={props.recipe.images.small} /> 
+                    </div>
+
+                    <div className="col col-md-6">
+                        <strong>{props.recipe.title}</strong><br />
+                    </div>
+
+                </div>
+                <div className="row">
+                    <div className="col col-md-12">
+                        <i>{props.recipe.description}</i>
+                    </div>
+                </div>
+
+            </div>
+    )
+
+}
+
+const RecipeMain = (props) => {
+
+    return (
+
+        <div className="recipeMain col-md-10">
+                    
+            <div className="row">
+                    <div className="col col-md-4">
+                        <img src={props.recipe.images.medium}  />
+                    </div>
+
+                    <div className="col col-md-8">
+                        <h2>{props.recipe.title}</h2>
+                        
+                        <div className="desc"><strong>{props.recipe.description}</strong></div>
+                        
+                        <div className="row">
+                            <div className="col col-md-6">
+                                Serves: {props.recipe.servings}
+                            </div>
+                            <div className="col col-md-6">
+                                Cook Time: {props.recipe.cookTime} minutes
+                            </div>
+                        </div>
+
+                        <div className="prep">Allow {props.recipe.prepTime} minutes for preperation.</div>
+        
+                    </div>
+            </div>
+
+
+            <div className="row">
+                    <IngredientList>
+                        {props.recipe.ingredients.map((item) => (
+                            <IngredientItem item={item} key={item.uuid} />
+                        ))}
+                    </IngredientList>
+
+                    <DirectionsBlock>
+                        {props.recipe.directions.map((task,index) => (
+                            <Dtask task={task} key={index}/>
+                        ))}
+                    </DirectionsBlock>
+            </div>
+        </div>
+
+    )
+}
+
+
+
+
+
+
+$(document).ready(function(){
+
+
+    const Atom = () => {
+        const [recipes, setRecipes] = React.useState([]);
+        const [specials, setSpecials] = React.useState([]);
+        const [selRecipe, setSelRecipe] = React.useState({});
+
+        React.useEffect(() => {
+            
+            Promise.all([
+                        ajaxGet('http://localhost:3001/recipes'),
+                        ajaxGet('http://localhost:3001/specials')
+                    ]).then(function(res){
+
+                        setRecipes(res[0]);
+                        setSpecials(res[1]);
+                });
+ 
+        }, []);
+
+
+
+        function selectRecipe(uuid){
+            
+            console.log(uuid);
+            let obj = findObj(recipes,'uuid',uuid);
+
+            let appendSpecial = (n) => {
+                let special = findObj(specials,'ingredientId',n.uuid);
+
+                if(special){
+                    n.special = special;
+                }
+
+                return n;
+            }
+
+            R.map(appendSpecial, obj.ingredients);
+
+            setSelRecipe(obj);
+        }
+
+
+
+       function nextRecipe(uuid){
+
+            console.log(uuid);
+            let index = R.findIndex(R.propEq('uuid', uuid))(recipes);
+            let uid = recipes[index+1] ? recipes[index+1].uuid : recipes[0].uuid;
+            
+            selectRecipe(uid);
+        }
+                
+        
+        
+        function clearRecipe(){
+            setSelRecipe({});
+        }
+
+
+        if(recipes !== [] && !selRecipe.uuid){
+
+            return (
+                <div className="d-flex flex-wrap justify-content-center">
+
+                    { recipes.map((rec) => (
+                        <RecipeBlock recipe={rec} key={rec.uuid} selectRecipe={selectRecipe} />
+                    )) }
+
+                </div>
+            );
+
+        } else {
+
+            return (
+
+                <div className="row justify-content-md-center">
+
+                    <div className="col col-md-10">
+
+                        <div className="row mb-3">
+        
+                            <div onClick={clearRecipe} className="col col-md-6 fakebutton" >
+                                <span className="bi bi-arrow-left-circle-fill"></span> Go Back</div>
+                            
+                            <div onClick={(e) => nextRecipe(selRecipe.uuid)} className="col col-md-6 fakebutton text-right">Next Recipe <span className="bi bi-arrow-right-circle-fill"></span></div>
+                            
+                        </div>
+                    </div>
+                
+                    <RecipeMain recipe={selRecipe} />
+                </div>
+            );
+        }
+
+        
+    };
+
+
+    ReactDOM.render(<Atom />, document.getElementById("app"));
+
+
+
+});
+
+
+      
+    </script>
+
+
+</body>
+</html>
